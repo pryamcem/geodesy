@@ -115,3 +115,38 @@ func ENUtoLLA(p ENU, origin LLA) LLA {
 	ecef := ENUtoECEF(p, originECEF, origin)
 	return ECEFtoLLA(ecef)
 }
+
+// ENUtoNED converts ENU coordinates to NED coordinates.
+// The frames share the same origin; the transformation is a permutation with sign flip on Z.
+func ENUtoNED(p ENU) NED {
+	return NED{X: p.Y, Y: p.X, Z: -p.Z}
+}
+
+// NEDtoENU converts NED coordinates to ENU coordinates.
+func NEDtoENU(p NED) ENU {
+	return ENU{X: p.Y, Y: p.X, Z: -p.Z}
+}
+
+// LLAtoNED converts geodetic coordinates directly to local NED coordinates
+// relative to a reference point.
+func LLAtoNED(p, origin LLA) NED {
+	return ENUtoNED(LLAtoENU(p, origin))
+}
+
+// NEDtoLLA converts local NED coordinates back to geodetic coordinates
+// relative to a reference point.
+func NEDtoLLA(p NED, origin LLA) LLA {
+	return ENUtoLLA(NEDtoENU(p), origin)
+}
+
+// ECEFtoNED converts ECEF coordinates to local NED coordinates
+// relative to a reference point.
+func ECEFtoNED(p, origin ECEF, originLLA LLA) NED {
+	return ENUtoNED(ECEFtoENU(p, origin, originLLA))
+}
+
+// NEDtoECEF converts local NED coordinates back to ECEF coordinates
+// relative to a reference point.
+func NEDtoECEF(p NED, origin ECEF, originLLA LLA) ECEF {
+	return ENUtoECEF(NEDtoENU(p), origin, originLLA)
+}

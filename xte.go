@@ -90,6 +90,41 @@ func XTE3DSegment(A, B, P ENU) float64 {
 	}
 }
 
+// XTE2DNED computes signed cross-track error from point P to infinite line A->B in NED.
+// Uses only horizontal (N/E) components, ignoring Down.
+//
+// Sign convention:
+//   - positive: P is left of track A->B
+//   - negative: P is right of track A->B
+//   - zero: P is on the track
+//
+// Returns distance in same units as input (meters for NED).
+func XTE2DNED(A, B, P NED) float64 {
+	return XTE2D(NEDtoENU(A), NEDtoENU(B), NEDtoENU(P))
+}
+
+// XTE2DNEDSegment computes signed cross-track error from point P to segment A->B in NED.
+// If projection falls outside the segment, returns distance to nearest endpoint.
+func XTE2DNEDSegment(A, B, P NED) float64 {
+	return XTE2DSegment(NEDtoENU(A), NEDtoENU(B), NEDtoENU(P))
+}
+
+// XTE3DNED computes unsigned cross-track error from point P to infinite line A->B in 3D NED.
+// Uses all three components (N/E/D).
+//
+// Note: Result is always positive (no left/right sign in 3D).
+//
+// Returns distance in same units as input (meters for NED).
+func XTE3DNED(A, B, P NED) float64 {
+	return XTE3D(NEDtoENU(A), NEDtoENU(B), NEDtoENU(P))
+}
+
+// XTE3DNEDSegment computes unsigned minimum distance from point P to segment A->B in 3D NED.
+// If projection falls outside the segment, returns distance to nearest endpoint.
+func XTE3DNEDSegment(A, B, P NED) float64 {
+	return XTE3DSegment(NEDtoENU(A), NEDtoENU(B), NEDtoENU(P))
+}
+
 // cross computes 3D cross product of vectors A and B.
 func cross(A, B Vec3) Vec3 {
 	return Vec3{

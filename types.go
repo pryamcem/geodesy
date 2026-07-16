@@ -36,3 +36,15 @@ type ECEF Vec3
 //
 // All values are in meters, representing displacement from the reference origin.
 type ENU Vec3
+
+// NED represents local North-East-Down tangent plane coordinates.
+// This is a local coordinate system relative to a reference point on Earth's surface.
+// Widely used in aerospace, robotics, and navigation applications.
+//
+// Axes:
+//   - X (North): positive towards geographic north
+//   - Y (East): positive towards geographic east
+//   - Z (Down): positive towards Earth's center (perpendicular to ellipsoid)
+//
+// All values are in meters, representing displacement from the reference origin.
+type NED Vec3
